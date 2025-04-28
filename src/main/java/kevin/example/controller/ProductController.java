@@ -94,6 +94,14 @@ public class ProductController {
         return ResponseEntity.ok("success");
     }
 
+    @Operation(
+            summary = "api get list product info",
+            description = "api get list product info",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successs"),
+                    @ApiResponse(responseCode = "400", description = "bad requesst")
+            }
+    )
     @GetMapping
     public ResponseEntity<ProductList> queryProduct(
             @RequestParam (defaultValue = "1", required = false) @Min(value = 1, message = "page is more than 1") Integer page,

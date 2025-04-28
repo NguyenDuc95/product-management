@@ -6,24 +6,29 @@ import kevin.example.dto.ProductList;
 import kevin.example.dto.ProductUpdateRequest;
 import kevin.example.entity.Product;
 import kevin.example.exceptions.BadRequestException;
+import kevin.example.mapper.ProductInfoMapper;
 import kevin.example.mapper.ProductMapper;
 import kevin.example.model.PageableInfo;
 import kevin.example.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.ResourceClosedException;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class ProductService {
     final ProductRepository productRepository;
     final ProductMapper productMapper;
-    public ProductService(ProductRepository productRepository, ProductMapper productMapper) {
+    final ProductInfoMapper productInfoMapper;
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper, ProductInfoMapper productInfoMapper) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
+        this.productInfoMapper = productInfoMapper;
     }
 
     public Product createNewProduct(NewProductRequest productRequest) {
@@ -56,7 +61,15 @@ public class ProductService {
     }
 
     public ProductList queryProductList(PageableInfo pageableInfo){
-
-        return null;
+        ProductList productList = new ProductList();
+        Page<Product> pageProduct = productRepository.findAll(pageableInfo.toPageable());
+        productList.setTotalItem(pageProduct.getNumberOfElements());
+        productList.setProductInfoList(
+                pageProduct.getContent()
+                        .stream()
+                        .map(productInfoMapper::productToProductInfo)
+                        .collect(Collectors.toList())
+        );
+        return productList;
     }
 }

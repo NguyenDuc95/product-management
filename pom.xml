@@ -65,4 +65,13 @@
         </dependency>
 
     </dependencies>
+    <build>
+<!--        use maven plugin to build to .jar runnable in java-->
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -110,6 +110,7 @@ public class ProductController {
             @RequestParam (defaultValue = "asc", required = false) String sort
     ){
         ProductList productList = productService.queryProductList(new PageableInfo(page, pageSize, sort, order));
+
         return ResponseEntity.ok().body(productList);
     }
 }
